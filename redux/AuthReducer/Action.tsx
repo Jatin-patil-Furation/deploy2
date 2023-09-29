@@ -128,7 +128,7 @@ const DeleteuserFail = () => {
 export const Loginpost = (payload: any) => (dispatch: Dispatch) => {
   dispatch(getLoginreq());
   return axios
-    .post(`https://blue-seahorse-suit.cyclic.cloud/api/v1/user/login`, payload)
+    .post(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/login`, payload)
     .then((r) => {
       return dispatch(getLoginsuccess(r.data));
     })
@@ -142,7 +142,7 @@ export const Loginpost = (payload: any) => (dispatch: Dispatch) => {
 export const Signuppost = (payload: any) => (dispatch: Dispatch) => {
   dispatch(getsignReq());
   return axios
-    .post(`https://blue-seahorse-suit.cyclic.cloud/api/v1/user/create`, payload)
+    .post(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/create`, payload)
     .then((r) => {
       return dispatch(getsignSucess(r.data));
     })
@@ -157,7 +157,7 @@ export const GetpresignedurlData = (param: any) => (dispatch: Dispatch) => {
   dispatch(UservatarReq());
   return axios
     .get(
-      `https://blue-seahorse-suit.cyclic.cloud/api/v1/aws/getpresignedurl/${param}`
+      `https://anxious-tiara-fox.cyclic.cloud/api/v1/aws/getpresignedurl/${param}`
     )
     .then((r) => {
       return dispatch(UservatarSucess(r.data));
@@ -194,16 +194,12 @@ export const UpdatedImage = (payload: any) => (dispatch: Dispatch) => {
 
   dispatch(updatedpostimageReq());
   return axios
-    .put(
-      `https://blue-seahorse-suit.cyclic.cloud/api/v1/user/update`,
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    .put(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/update`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
     .then((res) => {
       return dispatch(updatedimageucess(res.data));
     })
@@ -216,7 +212,7 @@ export const UpdatedImage = (payload: any) => (dispatch: Dispatch) => {
 export const DeleteuserAccount = (id: any) => (dispatch: Dispatch) => {
   dispatch(DeleteuserReq());
   return axios
-    .put(`https://blue-seahorse-suit.cyclic.cloud/api/v1/user/delete/${id}`)
+    .put(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/delete/${id}`)
     .then((res) => {
       return dispatch(Deleteuserucess());
     })
