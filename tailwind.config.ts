@@ -34,6 +34,7 @@ const config: Config = {
         xl: "1280px",
         mxl: "1400px",
         xs: "560px",
+        custombp: { raw: "(max-height: 320px),(min-width:568px)" },
       },
     },
   },
