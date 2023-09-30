@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import Banner from "@/components/gameDashboard/Banner";
 import Games from "@/components/gameDashboard/Games";
@@ -39,8 +39,9 @@ const Page = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showJointable, SetshowJointable] = useState(false);
   const [Createprivatetable, SetCreateprivatetable] = useState(false);
-  const [image, SetImage] = useState("");
+   const [image, SetImage] = useState("");
   const [isClient, setIsClient] = useState(false);
+     const [loading, setLoading] = useState(false);
   const ToggleDrawer = () => {
     setDrawerOpen((prev) => !prev);
   };
@@ -120,10 +121,11 @@ const Page = () => {
     setDrawerOpen(false);
     setDeposit(true);
   };
-  const handleChangereset = () => {
-    setDrawerOpen(false);
-    Setresetpassword(true);
-  };
+ const handleChangereset = () => {
+   setDrawerOpen(false);
+   Setresetpassword(true);
+ };
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -136,6 +138,7 @@ const Page = () => {
     city: "",
     postalCode: "",
   });
+
 
   useEffect(() => {
     if (getuserinfo) {
@@ -214,11 +217,12 @@ const Page = () => {
     }
   };
 
-  // const Admintrue = getuserinfo?.isAdmin;
+  const Admintrue = getuserinfo?.isAdmin;
 
-  const Admintrue = true;
+  //  const Admintrue =true
 
   const handleUpdateprofile = () => {
+    setLoading(true)
     const {
       dateOfBirth,
       name,
@@ -258,16 +262,19 @@ const Page = () => {
         console.log(res);
         if (res.type === "USEREDIT_IMAGE_SUCESS") {
           toast.success("Updated data sucessfully");
+           setLoading(false);
         }
       })
       .catch((err) => {
         console.log(err);
         toast.success(err);
+         setLoading(false);
       });
   };
 
   useEffect(() => {
-    GetloggedData(dispatch);
+    GetloggedData(dispatch)
+      
   }, []);
 
   return (
@@ -793,7 +800,7 @@ const Page = () => {
                           type="email"
                           placeholder={getuserinfo?.email}
                           name="email"
-                          value={formData?.email}
+                          value={getuserinfo?.email}
                           onChange={handleInputChange}
                           className="placeholder:text-GreyLight px-2 py-4 rounded-sm bg-GreyDark outline-none"
                         />
@@ -804,7 +811,7 @@ const Page = () => {
                           type="number"
                           placeholder={getuserinfo?.phone?.toString()}
                           name="phone"
-                          value={formData?.phone?.toString()}
+                          value={getuserinfo?.phone?.toString()}
                           onChange={handleInputChange}
                           className="placeholder:text-GreyLight px-2 py-4 rounded-sm bg-GreyDark outline-none"
                         />
@@ -891,7 +898,18 @@ const Page = () => {
                       onClick={handleUpdateprofile}
                       className="custom-gradient px-3 py-4 w-[90%] mx-auto my-3"
                     >
-                      update
+                      {loading ? (
+                        <div className="w-[50%] flex items-center h-[15px] m-auto  ">
+                          <Image
+                            src={`https://s3.us-east-2.amazonaws.com/sikkaplay.com-assets/assets/users/loading.gif`}
+                            alt="loader"
+                            width={200}
+                            height={100}
+                          />
+                        </div>
+                      ) : (
+                        "update"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -1479,7 +1497,7 @@ const Page = () => {
                           <input
                             type="email"
                             placeholder={getuserinfo?.email}
-                            value={formData?.email}
+                            value={getuserinfo?.email}
                             name="email"
                             onChange={handleInputChange}
                             className="placeholder:text-GreyLight px-2 py-4 rounded-sm bg-GreyDark outline-none"
@@ -1490,7 +1508,7 @@ const Page = () => {
                           <input
                             type="number"
                             placeholder={getuserinfo?.phone?.toString()}
-                            value={formData?.phone?.toString()}
+                            value={getuserinfo?.phone?.toString()}
                             name="phone"
                             onChange={handleInputChange}
                             className="placeholder:text-GreyLight px-2 py-4 rounded-sm bg-GreyDark outline-none"
@@ -1579,7 +1597,19 @@ const Page = () => {
                         onClick={handleUpdateprofile}
                         className="custom-gradient px-3 py-4 w-[90%] mx-auto my-3"
                       >
-                        update
+                        {loading ? (
+                          <div className="w-[50%] flex items-center h-[15px] m-auto  ">
+                            <Image
+                              src={`https://s3.us-east-2.amazonaws.com/sikkaplay.com-assets/assets/users/loading.gif`}
+                              alt="loader"
+                              width={200}
+                              height={100}
+                            />
+                          </div>
+                        ) : (
+                          "update"
+                        )}
+                      
                       </button>
                     </div>
                   </div>

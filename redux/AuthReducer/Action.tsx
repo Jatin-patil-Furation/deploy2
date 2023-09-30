@@ -133,7 +133,7 @@ export const Loginpost = (payload: any) => (dispatch: Dispatch) => {
       return dispatch(getLoginsuccess(r.data));
     })
     .catch((err) => {
-      dispatch(getLoginfailure());
+return     dispatch(getLoginfailure());
     });
 };
 
@@ -147,7 +147,7 @@ export const Signuppost = (payload: any) => (dispatch: Dispatch) => {
       return dispatch(getsignSucess(r.data));
     })
     .catch((err) => {
-      dispatch(getsignFail());
+return  dispatch(getsignFail());
     });
 };
 
@@ -194,12 +194,16 @@ export const UpdatedImage = (payload: any) => (dispatch: Dispatch) => {
 
   dispatch(updatedpostimageReq());
   return axios
-    .put(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/update`, payload, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    .put(
+      `https://anxious-tiara-fox.cyclic.cloud/api/v1/user/update`,
+      payload,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
     .then((res) => {
       return dispatch(updatedimageucess(res.data));
     })

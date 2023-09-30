@@ -33,7 +33,7 @@ const AdmingetuserReq = () => {
 
 const AdmingetuserSuccess = (payload: AxiosResponse<any, any>) => {
   return {
-    type: types.ADMINUSERDATASUCESS,
+    type: types.ADMINUSERDATASUCESS, 
     payload,
   };
 };
