@@ -39,6 +39,7 @@ const Page = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [showJointable, SetshowJointable] = useState(false);
   const [Createprivatetable, SetCreateprivatetable] = useState(false);
+  const [image, SetImage] = useState("");
   const [isClient, setIsClient] = useState(false);
   const ToggleDrawer = () => {
     setDrawerOpen((prev) => !prev);
@@ -167,7 +168,6 @@ const Page = () => {
       });
     }
   };
-
   const handleImageChange = async (e) => {
     try {
       const selectedFile = e.target.files && e.target.files[0];
@@ -178,14 +178,15 @@ const Page = () => {
       } else {
         SetImage(selectedFile);
       }
-      const filenam = selectedFile.name.split(".")[0];
+      // const filenam = selectedFile.name.split(".")[0];
+      const filenam = selectedFile.name;
       const action = await GetpresignedurlData(filenam)(dispatch);
       const preurl = action?.payload?.presignedurl;
 
       const res = await UpdatedPost(preurl, selectedFile)(dispatch);
-
+      console.log("resawsupdated", res);
       const avatar = action?.payload?.presignedurl.split("?")[0];
-      // console.log("avatara", avatar);
+      console.log("avatara", avatar);
       const payload = {
         avatar: avatar,
       };
@@ -205,18 +206,17 @@ const Page = () => {
           }
         })
         .catch((err) => {
-          toast.error(err);
           console.log(err);
+          toast.success(err);
         });
     } catch (err) {
-      toast.error(err);
       console.error(err);
     }
   };
 
-  const Admintrue = getuserinfo?.isAdmin;
+  // const Admintrue = getuserinfo?.isAdmin;
 
-  //  const Admintrue =true
+  const Admintrue = true;
 
   const handleUpdateprofile = () => {
     const {
