@@ -998,7 +998,7 @@ const LandscapePage = () => {
                   </div>
                 )}
               </div>
-            </d>
+            </div>
             <Cardanimate
               cardsInfo={cardsInfo || players?.[playerId]?.cardSet?.cards}
               seeplayingcard={players?.[playerId]?.seen}
