@@ -483,7 +483,7 @@ const LandscapePage = () => {
             </button>
           </div>
           <div className="right-container flex justify-between gap-2">
-            {Object.keys(slotPlayerMap).length > 2 && (
+            {Object.keys(slotPlayerMap).length >= 2 && (
               <div onClick={() => setIsChatOpen(true)}>
                 <img
                   src={"/assets/Game-table/message.svg"}
