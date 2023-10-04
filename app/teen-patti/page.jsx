@@ -49,6 +49,9 @@ const LandscapePage = () => {
       setHasDoubled(true);
     }
   };
+  const handleExitTable = () => {
+    window.location.href = "/dashboard";
+  };
 
   const handleDeduct = () => {
     if (hasDoubled) {
@@ -130,7 +133,7 @@ const LandscapePage = () => {
       if (containerRef.current) {
         containerRef.current.scrollTop = containerRef.current.scrollHeight;
       }
-      
+
       socketRef.current.on("notification", (data) => {
         console.log(data);
         setNotification(data?.message);
@@ -458,13 +461,14 @@ const LandscapePage = () => {
         {/* navbar */}
         <div className="teen-patti-navbar  flex justify-between w-[80%] mx-auto ">
           <div className="left-container flex justify-between items-center gap-7 ">
-            <div className="img-container">
+            <div className="img-containe cursor-pointer">
               <img
                 src={"/assets/Game-table/arrow-left.svg"}
                 alt="left-arrow"
                 className="w-[90%]"
                 width={50}
                 height={50}
+                onClick={handleExitTable}
               />
             </div>
             <button className="relative custom-gradient px-5 py-1">
@@ -479,15 +483,17 @@ const LandscapePage = () => {
             </button>
           </div>
           <div className="right-container flex justify-between gap-2">
-            <div onClick={() => setIsChatOpen(true)}>
-              <img
-                src={"/assets/Game-table/message.svg"}
-                alt="message icon"
-                width={50}
-                height={50}
-                className="w-full cursor-pointer"
-              />
-            </div>
+            {Object.keys(slotPlayerMap).length > 2 && (
+              <div onClick={() => setIsChatOpen(true)}>
+                <img
+                  src={"/assets/Game-table/message.svg"}
+                  alt="message icon"
+                  width={50}
+                  height={50}
+                  className="w-full cursor-pointer"
+                />
+              </div>
+            )}
             <div>
               <img
                 src={"/assets/Game-table/info-tag.svg"}
@@ -502,7 +508,7 @@ const LandscapePage = () => {
         {/* table */}
         <div className="h-[76%] w-[100%]">
           <div className="Img-container absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[75vw] sml:w-[65vw] xl:w-[62vw] 2xl:w-[70vw]    max-w-7xl ">
-            <d iv className="relative w-full h-full">
+            <div className="relative w-full h-full">
               <img
                 src={"/assets/Game-table/table-background.svg"}
                 alt="table"
@@ -1029,7 +1035,7 @@ const LandscapePage = () => {
                   </div>
                 )}
               </div>
-            </d>
+            </div>
             <Cardanimate
               cardsInfo={cardsInfo || players?.[playerId]?.cardSet?.cards}
               seeplayingcard={players?.[playerId]?.seen}
@@ -1165,12 +1171,8 @@ const LandscapePage = () => {
               value={message}
               className="rounded-md text-black px-3 py-2 basis-[70%] placeholder:text-black "
               onChange={(e) => {
-                const inputText = e.target.value.trim();
-
-                if (inputText !== "") {
-                  console.log(inputText);
-                  setMessage(inputText);
-                }
+                const inputText = e.target.value;
+                setMessage(inputText);
               }}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
