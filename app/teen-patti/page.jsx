@@ -11,6 +11,7 @@ import Righttop from "@/components/Animation/Righttop";
 import Rightmiddle from "@/components/Animation/Rightmiddle";
 import Rightbottom from "@/components/Animation/Rightbottom";
 import Shareinvite from "@/components/modals/Shareinvite";
+import BlockPlayerModal from "@/components/modals/BlockPLayerModal";
 
 const LandscapePage = () => {
   const [messages, setMessages] = useState([]);
@@ -39,6 +40,8 @@ const LandscapePage = () => {
   const [cardsInfo, setCardsInfo] = useState(null);
   const [Loggeduser, setLoggeduser] = useState(null);
   const [privateTableKey, setPrivateTableKey] = useState(null);
+  const [showBlockPlayerModal, setBlockPlayerModal] = useState(false);
+  const [selectedBlockPlayer, setSelectedBlockPlayer] = useState(null);
 
   const containerRef = useRef(null);
 
@@ -98,7 +101,7 @@ const LandscapePage = () => {
     setLoggeduser(() => Loggeduser);
     console.log(privateTableKey);
     console.log("connection start ");
-    socketRef.current = io("https://newsocket.onrender.com/", {
+    socketRef.current = io("http://localhost:8000/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -122,6 +125,7 @@ const LandscapePage = () => {
         _id: Loggeduser?.id,
         fees: 0,
         avatar: Loggeduser?.avatar,
+        isAdmin: Loggeduser?.isAdmin,
         id: socketId,
       });
 
@@ -240,6 +244,7 @@ const LandscapePage = () => {
         setWinReason(null);
         setCardsInfo(null);
         setNotification(null);
+        setSelectedBlockPlayer(null);
         const countdown = 5; // Replace with the timer value from your data
         setGameStartCounter(countdown);
 
@@ -278,6 +283,7 @@ const LandscapePage = () => {
         console.log(data.sentObj);
       });
     });
+
     return () => {
       socketRef.current.on("disconnect", () => {
         setIsSocketConnected(false);
@@ -439,8 +445,18 @@ const LandscapePage = () => {
       console.log("Socket is not connected. Cannot emit event.");
     }
   };
-
-  const slotPlayerMap = {};
+  const handleBlockPlayer = () => {
+    if (isSocketConnected && selectedBlockPlayer.id) {
+      console.log(selectedBlockPlayer);
+      socketRef.current.emit("kickOut", {
+        id: selectedBlockPlayer.id,
+      });
+      setSelectedBlockPlayer(null);
+    } else {
+      console.log("Socket is not connected. Cannot emit event.");
+    }
+  };
+  let slotPlayerMap = {};
 
   if (players) {
     for (const playerKey in players) {
@@ -454,6 +470,13 @@ const LandscapePage = () => {
   console.log(slotPlayerMap, playerSlotIndex, slotPlayerMap?.[playerSlotIndex]);
   console.log(cardsInfo);
   console.log(Loggeduser?.avatar);
+  console.log(messages);
+  console.log(selectedBlockPlayer, playerId);
+
+  if (slotPlayerMap?.[playerSlotIndex]?.kickout) {
+    // socketRef.current.emit("left");
+    window.location.href = "/dashboard";
+  }
 
   return (
     <div className="min-h-screen relative  font-roboto bg-[url('/assets/landingPage/sikkaplaybg.svg')] bg-cover bg-no-repeat   overflow-y-clip mx-auto">
@@ -494,15 +517,18 @@ const LandscapePage = () => {
                 />
               </div>
             )}
-            <div>
-              <img
-                src={"/assets/Game-table/info-tag.svg"}
-                alt="Info-tag"
-                width={50}
-                height={50}
-                className="w-full cursor-pointer "
-              />
-            </div>
+            {players?.[playerId]?.turn &&
+              players?.[playerId]?.playerInfo?.isAdmin && (
+                <div onClick={() => setBlockPlayerModal(true)}>
+                  <img
+                    src={"/assets/Game-table/info-tag.svg"}
+                    alt="Info-tag"
+                    width={50}
+                    height={50}
+                    className="w-full cursor-pointer "
+                  />
+                </div>
+              )}
           </div>
         </div>
         {/* table */}
@@ -1123,6 +1149,7 @@ const LandscapePage = () => {
             )}
         </div>
       </div>
+
       {isChatOpen && (
         <div className="fixed  right-0 top-0 bottom-0 bg-black  opacity-90  z-[200] w-[40%] h-full ">
           <div className="h-[10%] relative w-full">
@@ -1190,6 +1217,14 @@ const LandscapePage = () => {
             </button>
           </div>
         </div>
+      )}
+      {showBlockPlayerModal && (
+        <BlockPlayerModal
+          setBlockPlayerModal={setBlockPlayerModal}
+          slotPlayerMap={slotPlayerMap}
+          handleBlockPlayer={handleBlockPlayer}
+          setSelectedBlockPlayer={setSelectedBlockPlayer}
+        />
       )}
       {playerId && players?.[playerId]?.sideShowTurn && sideShowModal && (
         <SideShow
