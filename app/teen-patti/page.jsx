@@ -11,7 +11,7 @@ import Righttop from "@/components/Animation/Righttop";
 import Rightmiddle from "@/components/Animation/Rightmiddle";
 import Rightbottom from "@/components/Animation/Rightbottom";
 import Shareinvite from "@/components/modals/Shareinvite";
-import BlockPlayerModal from "@/components/modals/BlockPLayerModal";
+import BlockPlayerModal from "@/components/modals/BlockPlayerModal";
 
 const LandscapePage = () => {
   const [messages, setMessages] = useState([]);
@@ -101,7 +101,7 @@ const LandscapePage = () => {
     setLoggeduser(() => Loggeduser);
     console.log(privateTableKey);
     console.log("connection start ");
-    socketRef.current = io("http://localhost:8000/", {
+    socketRef.current = io("http://localhost:8080/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
@@ -474,8 +474,24 @@ const LandscapePage = () => {
   console.log(selectedBlockPlayer, playerId);
 
   if (slotPlayerMap?.[playerSlotIndex]?.kickout) {
-    // socketRef.current.emit("left");
-    window.location.href = "/dashboard";
+    if (isSocketConnected) {
+      // Emit the socket event here
+      console.log("pack called ", value);
+
+      socketRef.current.emit("placePack", {
+        player: {
+          id: gameData?.id,
+          playerInfo: gameData?.playerInfo,
+        },
+        bet: {
+          amount: value,
+          blind: isBliend,
+        },
+      });
+      window.location.href = "/dashboard";
+    } else {
+      console.log("Socket is not connected. Cannot emit event.");
+    }
   }
 
   return (
