@@ -101,7 +101,7 @@ const LandscapePage = () => {
     setLoggeduser(() => Loggeduser);
     console.log(privateTableKey);
     console.log("connection start ");
-    socketRef.current = io("http://localhost:8080/", {
+    socketRef.current = io("https://newsocket.onrender.com/", {
       transports: ["websocket"],
     });
     socketRef.current.on("connect", () => {
