@@ -11,7 +11,7 @@ import Righttop from "@/components/Animation/Righttop";
 import Rightmiddle from "@/components/Animation/Rightmiddle";
 import Rightbottom from "@/components/Animation/Rightbottom";
 import Shareinvite from "@/components/modals/Shareinvite";
-import BlockPlayerModal from "@/components/modals/BlockPLayerModal";
+import BlockPlayerModal from "@/components/modals/BlockPlayerModal";
 
 const LandscapePage = () => {
   const [messages, setMessages] = useState([]);
