@@ -11,10 +11,11 @@ import Toast from "../notification/Toast";
 import { useDispatch } from "react-redux";
 import {
   Loginpost,
+  Phoneloginpost,
   Signuppost
 } from "@/redux/AuthReducer/Action";
 import Link from "next/link";
-import { Phoneloginpost } from "@/redux/redux/AuthReducer/Action";
+// import { Phoneloginpost } from "@/redux/redux/AuthReducer/Action";
 
 const countryCodes = [
   {

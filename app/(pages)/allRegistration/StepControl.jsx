@@ -8,14 +8,14 @@ import { auth } from "../../Firebase/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Loginpost,
-  // Phoneloginpost,
+  Phoneloginpost,
   Signuppost,
 } from "../../../redux/AuthReducer/Action";
 import Toast from "../notification/Toast";
 import { useRouter } from "next/navigation";
 import "./step.css";
 import Image from "next/image";
-import { Phoneloginpost } from "@/redux/redux/AuthReducer/Action";
+
 
 const countryCodes = [
   {

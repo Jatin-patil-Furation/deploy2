@@ -1,6 +1,8 @@
 import * as types from "./ActionTypes";
 import axios, { AxiosResponse } from "axios";
 import { Dispatch } from "@reduxjs/toolkit";
+import {Baseurl} from "./api"
+//  console.log("Baseurl",Baseurl)
 
 const getLoginreq = () => {
   return {
@@ -117,17 +119,51 @@ const DeleteuserFail = () => {
   };
 };
 
+ // --------------------------- phone-login -------------------------
+  const PhoneLoginreq = () => {
+    return {
+      type: types.PHONELOGINUSERREQ,
+    };
+  };
+
+  const PhoneLoginsuccess = (payload: AxiosResponse<any, any>) => {
+    return {
+      type: types.PHONELOGINUSERSUCESS,
+      payload,
+    };
+  };
+
+  const PhoneLoginfailure = () => {
+    return {
+      type: types.PHONELOGINUSERFAILURE,
+    };
+  };
+
+      // Phonelogin request
+export const Phoneloginpost = (payload: any) => (dispatch: Dispatch) => {
+  dispatch(PhoneLoginreq());
+  return axios
+    .post(`${Baseurl}/user/phone-login`, payload)
+    .then((r) => {
+      return dispatch(PhoneLoginsuccess(r.data));
+    })
+    .catch((err) => {
+      return dispatch(PhoneLoginfailure());
+    });
+};
+
+
 
 // login request
 export const Loginpost = (payload: any) => (dispatch: Dispatch) => {
   dispatch(getLoginreq());
   return axios
-    .post(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/login`, payload)
+    .post(`${Baseurl}/user/login`, payload)
     .then((r) => {
       return dispatch(getLoginsuccess(r.data));
     })
     .catch((err) => {
-return     dispatch(getLoginfailure());
+      return dispatch(getLoginfailure());
     });
 };
 
@@ -136,12 +172,12 @@ return     dispatch(getLoginfailure());
 export const Signuppost = (payload: any) => (dispatch: Dispatch) => {
   dispatch(getsignReq());
   return axios
-    .post(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/create`, payload)
+    .post(`${Baseurl}/user/create`, payload)
     .then((r) => {
       return dispatch(getsignSucess(r.data));
     })
     .catch((err) => {
-return  dispatch(getsignFail());
+      return dispatch(getsignFail());
     });
 };
 
@@ -150,9 +186,7 @@ return  dispatch(getsignFail());
 export const GetpresignedurlData = (param: any) => (dispatch: Dispatch) => {
   dispatch(UservatarReq());
   return axios
-    .get(
-      `https://anxious-tiara-fox.cyclic.cloud/api/v1/aws/getpresignedurl/${param}`
-    )
+    .get(`${Baseurl}/aws/getpresignedurl/${param}`)
     .then((r) => {
       return dispatch(UservatarSucess(r.data));
     })
@@ -188,16 +222,12 @@ export const UpdatedImage = (payload: any) => (dispatch: Dispatch) => {
 
   dispatch(updatedpostimageReq());
   return axios
-    .put(
-      `https://anxious-tiara-fox.cyclic.cloud/api/v1/user/update`,
-      payload,
-      {
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    )
+    .put(`${Baseurl}/user/update`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
     .then((res) => {
       return dispatch(updatedimageucess(res.data));
     })
@@ -217,18 +247,16 @@ export const DeleteuserAccount = (id: any) => (dispatch: Dispatch) => {
 
   dispatch(DeleteuserReq());
    return axios
-    .put(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/delete/${id}`,{
-        
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      
-    })
-    .then((res) => {
-      return dispatch(Deleteuserucess());
-    })
-    .catch((e) => {
-      return dispatch(DeleteuserFail());
-    });
+     .put(`${Baseurl}/user/delete/${id}`, {
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+       },
+     })
+     .then((res) => {
+       return dispatch(Deleteuserucess());
+     })
+     .catch((e) => {
+       return dispatch(DeleteuserFail());
+     });
 };
