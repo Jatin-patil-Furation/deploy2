@@ -5,18 +5,16 @@ import React, { useState, FC, useRef, useEffect } from "react";
 import orline from "../../../public/assets/users/orline.svg";
 import Image from "next/image";
 import googlelogo from "../../../public/assets/users/gogle.svg";
-import Applelogo from "../../../public/assets/users/Apple.svg";
 import { useRouter } from "next/navigation";
 import { googleSignIn, setUpCaptcha } from "../../Google/Google";
 import Toast from "../notification/Toast";
 import { useDispatch } from "react-redux";
-
 import {
   Loginpost,
-  Phoneloginpost,
-  Signuppost,
+  Signuppost
 } from "@/redux/AuthReducer/Action";
 import Link from "next/link";
+import { Phoneloginpost } from "@/redux/redux/AuthReducer/Action";
 
 const countryCodes = [
   {
@@ -505,3 +503,69 @@ const PhoneNumber = () => {
 };
 
 export default PhoneNumber;
+
+/**
+ *  const handleGoogleLogin = async () => {
+    if (!isChecked) {
+      toast.success("min age 18 Check if you are 18");
+    } else {
+      try {
+        const user = await googleSignIn();
+        console.log(user);
+            if(user?.user?.accessToken) {
+
+            }
+        const payload = {
+          name: user?.user?.displayName,
+          email: user?.user?.email,
+          avatar: user?.user?.photoURL,
+        };
+       
+        const loginuser = {
+          email: user?.user?.email,
+        };
+        console.log("loginuser", loginuser);
+        
+        Signuppost(payload)(dispatch)
+          .then((res) => {
+            console.log("userbackendsendresponse", res);
+            
+            //  Loginpost(loginuser)(dispatch)
+            //    .then((res) => {
+            //      console.log("res", res);
+            //      if (
+            //        res?.type === "LOGINUSERSUCESS" &&
+            //        res?.payload.msg ===
+            //          "login successful, please take the token and keep it safe"
+            //      ) {
+            //        localStorage.setItem(
+            //          "Loggeduser",
+            //          JSON.stringify(res?.payload?.resData)
+            //        );
+            //        localStorage.setItem(
+            //          "token",
+            //          JSON.stringify(res?.payload?.token)
+            //        );
+            //        toast.success("Signup Sucesssful");
+            //        router.push("/dashboard");
+            //      } else {
+            //        toast.error("something went wrong");
+            //      }
+            //    })
+            //    .catch((err) => {
+            //      console.log(err);
+            //      toast.error(err);
+            //    });
+         
+          })
+          .catch((err) => {
+            console.log(err.error);
+            toast.error(err);
+          });
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
+      }
+    }
+  };
+ */

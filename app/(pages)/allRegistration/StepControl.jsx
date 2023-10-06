@@ -8,13 +8,14 @@ import { auth } from "../../Firebase/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Loginpost,
-  Phoneloginpost,
+  // Phoneloginpost,
   Signuppost,
 } from "../../../redux/AuthReducer/Action";
 import Toast from "../notification/Toast";
 import { useRouter } from "next/navigation";
 import "./step.css";
 import Image from "next/image";
+import { Phoneloginpost } from "@/redux/redux/AuthReducer/Action";
 
 const countryCodes = [
   {
@@ -71,6 +72,7 @@ const StepControl = ({ currentStep, SetCurrentStep, steps }) => {
       email: "",
       phone: phonenum?.phone || "",
       dateOfBirth: "",
+      password:"",
     });
   }, []);
 
@@ -236,9 +238,10 @@ const StepControl = ({ currentStep, SetCurrentStep, steps }) => {
       email.trim() !== "" &&
       phone !== "" &&
       name.trim() !== null &&
-      password.trim() !== ""
+      password?.trim() !== ""
     );
   };
+  console.log("formdata",formData)
 
   return (
     <>
@@ -309,7 +312,6 @@ const StepControl = ({ currentStep, SetCurrentStep, steps }) => {
               name="dateOfBirth"
               onChange={handleInputChange}
               value={formData?.dateOfBirth?.slice(0, 10)}
-              // placeholder={formData?.dateOfBirth?.slice(0, 10)}
               className="w-full md:py-[.8rem] text-sm 
                 text-uppercase bg-[#1E1E1E] text-white  border-red-600  p-2 rounded "
               placeholder="MM/DD/YYYY"
