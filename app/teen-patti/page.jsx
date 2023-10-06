@@ -524,6 +524,7 @@ const LandscapePage = () => {
     }
   };
   const handleBlockPlayer = () => {
+    setBlockPlayerModal(false);
     if (isSocketConnected && selectedBlockPlayer.id) {
       console.log(selectedBlockPlayer);
       socketRef.current.emit("kickOut", {
@@ -985,7 +986,6 @@ const LandscapePage = () => {
                   </div>
 
                   {/* right- middle*/}
-
                   <div className="absolute right-[-15rem] mxl:right-[-17rem] top-[40%] transform -translate-x-1/2 -translate-y-1/2 w-[35%] lg:w-[30%] 2xl:w-[25%]   h-[40%] 2xl:h-[30%] my-3  ">
                     <div className="relative w-full h-full flex flex-col items-center gap-4 ">
                       <div className="relative w-[50%]  flex flex-col items-center gap-3   ">
@@ -1284,7 +1284,6 @@ const LandscapePage = () => {
               </div>
             </div>
             {/* footer */}
-
             <div className="teen-patti-navbar  mx-auto  bottom-5 left-0  right-0 flex justify-evenly items-center w-[100%]   ">
               <div className="left-container flex justify-between items-center gap-7 ">
                 {players?.[playerId]?.turn && !players?.[playerId]?.packed && (

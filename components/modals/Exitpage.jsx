@@ -1,15 +1,11 @@
-'use client';
+"use client";
 import Image from "next/image";
 import React from "react";
 
-
 const Exitpage = ({ SetExituserModal }) => {
- 
- 
-   const QuitGame = () =>{
-        window.location.href="/dashboard"
-   }
-  
+  const QuitGame = () => {
+    window.location.href = "/dashboard";
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
@@ -23,7 +19,7 @@ const Exitpage = ({ SetExituserModal }) => {
             onClick={() => {
               SetExituserModal(false);
             }}
-            className="border border-opacity-100 px-5 py-2 text-sm rounded-sm  sm:text-base md:text-lg lg:text-xl  "
+            className="border border-opacity-100 px-5 py-2 text-sm text-white rounded-sm  sm:text-base md:text-lg lg:text-xl  "
             style={{
               borderImage:
                 "linear-gradient(111deg, rgba(173, 11, 64, 0.88) 9.86%, #ff1917 63.95%) 1",
