@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import PhoneNumber from "../phonenumber/PhoneNumber";
 import EmailLogin from "../EmailLogin/EmailLogin";
 
-import VerifyField from "../EnterOTP/VerifyFeild";
-
 
 const Tablist = () => {
   const [activeTab, setActiveTab] = useState("login");

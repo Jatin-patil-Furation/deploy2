@@ -1,6 +1,7 @@
 import * as types from "./ActionTypes";
 import axios, { AxiosResponse } from "axios";
 import { Dispatch } from "@reduxjs/toolkit";
+import { Baseurl } from "../AuthReducer/api";
 
 //  Get user Logged data
 
@@ -33,7 +34,7 @@ const AdmingetuserReq = () => {
 
 const AdmingetuserSuccess = (payload: AxiosResponse<any, any>) => {
   return {
-    type: types.ADMINUSERDATASUCESS,
+    type: types.ADMINUSERDATASUCESS, 
     payload,
   };
 };
@@ -135,12 +136,6 @@ export const playprivatetableSuccess = (payload: any) => {
   };
 };
 
-// interface Usertoken {
-//   token: string;
-// }
-
-// const utoken = localStorage.getItem("token");
-// const token: Usertoken | null = utoken ? JSON.parse(utoken) : null;
 
 export const GetloggedData = (dispatch: Dispatch) => {
   interface Usertoken {
@@ -181,7 +176,7 @@ export const GETADMINALLUSERDATA = (dispatch: Dispatch) => {
 
   dispatch(AdmingetuserReq());
   return axios
-    .get(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/gets/`, {
+    .get(`${Baseurl}/v1/user/gets/`, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -201,11 +196,24 @@ export const GETADMINALLUSERDATA = (dispatch: Dispatch) => {
 
 export const Createtounament =
   (id: any, payload: any) => (dispatch: Dispatch) => {
+      interface Usertoken {
+        token: string;
+      }
+
+      const utoken = localStorage.getItem("token");
+      const token: Usertoken | null = utoken ? JSON.parse(utoken) : null;
+
     dispatch(CreatetournamentReq());
     return axios
       .put(
         `https://anxious-tiara-fox.cyclic.cloud/api/v1/user/update/${id}`,
-        payload
+        payload,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
       )
       .then((res) => {
         return dispatch(CreateTournamentSuccess(res.data));
@@ -220,12 +228,21 @@ export const Createtounament =
 }
 
 export const ADMINCREDIT = (payload: any) => (dispatch: Dispatch) => {
+   interface Usertoken {
+     token: string;
+   }
+
+   const utoken = localStorage.getItem("token");
+   const token: Usertoken | null = utoken ? JSON.parse(utoken) : null;
+
   dispatch(AdmincreditReq());
   return axios
-    .post(
-      `https://anxious-tiara-fox.cyclic.cloud/api/v1/transaction/update-user-wallet/credit`,
-      payload
-    )
+    .post(`${Baseurl}/transaction/update-user-wallet/credit`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
     .then((res) => {
       return dispatch(AdmincreditSuccess(res.data));
     })
@@ -239,12 +256,21 @@ export const ADMINCREDIT = (payload: any) => (dispatch: Dispatch) => {
 }
 
 export const ADMINDEBIT = (payload: any) => (dispatch: Dispatch) => {
+    interface Usertoken {
+      token: string;
+    }
+
+    const utoken = localStorage.getItem("token");
+    const token: Usertoken | null = utoken ? JSON.parse(utoken) : null;
+
   dispatch(AdmindebitReq());
   return axios
-    .post(
-      `https://anxious-tiara-fox.cyclic.cloud/api/v1/transaction/update-user-wallet/debit`,
-      payload
-    )
+    .post(`${Baseurl}/transaction/update-user-wallet/debit`, payload, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
     .then((res) => {
       return dispatch(AdmindebitSuccess(res.data));
     })
@@ -264,7 +290,7 @@ export const CREATEPRIVATETABLE = (dispatch: Dispatch) => {
   dispatch(JOinprivatetableReq());
   return axios
     .post(
-      `https://anxious-tiara-fox.cyclic.cloud/api/v1/table/create/private`,
+      `${Baseurl}/table/create/private`,
       {},
       {
         headers: {

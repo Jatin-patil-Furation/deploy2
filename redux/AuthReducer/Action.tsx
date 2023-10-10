@@ -1,6 +1,8 @@
 import * as types from "./ActionTypes";
 import axios, { AxiosResponse } from "axios";
 import { Dispatch } from "@reduxjs/toolkit";
+import {Baseurl} from "./api"
+//  console.log("Baseurl",Baseurl)
 
 const getLoginreq = () => {
   return {
@@ -117,23 +119,51 @@ const DeleteuserFail = () => {
   };
 };
 
-// interface Usertoken {
-//   token: string;
-// }
+ // --------------------------- phone-login -------------------------
+  const PhoneLoginreq = () => {
+    return {
+      type: types.PHONELOGINUSERREQ,
+    };
+  };
 
-// const utoken = localStorage.getItem("token");
-// const token: Usertoken | null = utoken ? JSON.parse(utoken) : null;
+  const PhoneLoginsuccess = (payload: AxiosResponse<any, any>) => {
+    return {
+      type: types.PHONELOGINUSERSUCESS,
+      payload,
+    };
+  };
+
+  const PhoneLoginfailure = () => {
+    return {
+      type: types.PHONELOGINUSERFAILURE,
+    };
+  };
+
+      // Phonelogin request
+export const Phoneloginpost = (payload: any) => (dispatch: Dispatch) => {
+  dispatch(PhoneLoginreq());
+  return axios
+    .post(`${Baseurl}/user/phone-login`, payload)
+    .then((r) => {
+      return dispatch(PhoneLoginsuccess(r.data));
+    })
+    .catch((err) => {
+      return dispatch(PhoneLoginfailure());
+    });
+};
+
+
 
 // login request
 export const Loginpost = (payload: any) => (dispatch: Dispatch) => {
   dispatch(getLoginreq());
   return axios
-    .post(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/login`, payload)
+    .post(`${Baseurl}/user/login`, payload)
     .then((r) => {
       return dispatch(getLoginsuccess(r.data));
     })
     .catch((err) => {
-      dispatch(getLoginfailure());
+      return dispatch(getLoginfailure());
     });
 };
 
@@ -142,12 +172,12 @@ export const Loginpost = (payload: any) => (dispatch: Dispatch) => {
 export const Signuppost = (payload: any) => (dispatch: Dispatch) => {
   dispatch(getsignReq());
   return axios
-    .post(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/create`, payload)
+    .post(`${Baseurl}/user/create`, payload)
     .then((r) => {
       return dispatch(getsignSucess(r.data));
     })
     .catch((err) => {
-      dispatch(getsignFail());
+      return dispatch(getsignFail());
     });
 };
 
@@ -156,9 +186,7 @@ export const Signuppost = (payload: any) => (dispatch: Dispatch) => {
 export const GetpresignedurlData = (param: any) => (dispatch: Dispatch) => {
   dispatch(UservatarReq());
   return axios
-    .get(
-      `https://anxious-tiara-fox.cyclic.cloud/api/v1/aws/getpresignedurl/${param}`
-    )
+    .get(`${Baseurl}/aws/getpresignedurl/${param}`)
     .then((r) => {
       return dispatch(UservatarSucess(r.data));
     })
@@ -194,7 +222,7 @@ export const UpdatedImage = (payload: any) => (dispatch: Dispatch) => {
 
   dispatch(updatedpostimageReq());
   return axios
-    .put(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/update`, payload, {
+    .put(`${Baseurl}/user/update`, payload, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -210,13 +238,25 @@ export const UpdatedImage = (payload: any) => (dispatch: Dispatch) => {
 
 //  delete user  Account
 export const DeleteuserAccount = (id: any) => (dispatch: Dispatch) => {
+  interface Usertoken {
+    token: string;
+  }
+
+  const utoken = localStorage.getItem("token");
+  const token: Usertoken | null = utoken ? JSON.parse(utoken) : null;
+
   dispatch(DeleteuserReq());
-  return axios
-    .put(`https://anxious-tiara-fox.cyclic.cloud/api/v1/user/delete/${id}`)
-    .then((res) => {
-      return dispatch(Deleteuserucess());
-    })
-    .catch((e) => {
-      return dispatch(DeleteuserFail());
-    });
+   return axios
+     .put(`${Baseurl}/user/delete/${id}`, {
+       headers: {
+         "Content-Type": "application/json",
+         Authorization: `Bearer ${token}`,
+       },
+     })
+     .then((res) => {
+       return dispatch(Deleteuserucess());
+     })
+     .catch((e) => {
+       return dispatch(DeleteuserFail());
+     });
 };

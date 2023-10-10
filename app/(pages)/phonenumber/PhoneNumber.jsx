@@ -5,14 +5,17 @@ import React, { useState, FC, useRef, useEffect } from "react";
 import orline from "../../../public/assets/users/orline.svg";
 import Image from "next/image";
 import googlelogo from "../../../public/assets/users/gogle.svg";
-import Applelogo from "../../../public/assets/users/Apple.svg";
 import { useRouter } from "next/navigation";
 import { googleSignIn, setUpCaptcha } from "../../Google/Google";
 import Toast from "../notification/Toast";
 import { useDispatch } from "react-redux";
-
-import { Loginpost, Signuppost } from "@/redux/AuthReducer/Action";
+import {
+  Loginpost,
+  Phoneloginpost,
+  Signuppost
+} from "@/redux/AuthReducer/Action";
 import Link from "next/link";
+// import { Phoneloginpost } from "@/redux/redux/AuthReducer/Action";
 
 const countryCodes = [
   {
@@ -53,11 +56,9 @@ const countryCodes = [
   },
 ];
 
-
-
 const confirmationResult = null;
 
-const PhoneNumber= () => {
+const PhoneNumber = () => {
   const [isChecked, setIsChecked] = useState(false);
 
   const handleCheckboxChange = () => {
@@ -75,8 +76,8 @@ const PhoneNumber= () => {
   const [adotp, SetadOTP] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [temp, setTemp] = useState(false);
-  const [confirmationResult, setConfirmationResult] =
-    useState(null); // Use ConfirmationResult type or null
+  const [confirmationResult, setConfirmationResult] = useState(null); // Use ConfirmationResult type or null
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const handleCountryCodeChange = (e) => {
     setSelectedCountryCode(e.target.value);
@@ -95,10 +96,7 @@ const PhoneNumber= () => {
     setPhoneNumber(newPhoneNumber);
   };
   const buttonColor = calculateButtonColor(phoneNumber);
-  const handleOnchange = (
-    e,
-    index
-   ) => {
+  const handleOnchange = (e, index) => {
     const { value } = e.target;
     const newOTP = [...otp];
     newOTP[index] = value.substring(value.length - 1);
@@ -115,13 +113,112 @@ const PhoneNumber= () => {
     SetadOTP(otpArry);
   };
 
-  const handleKeydown = (
-    { key },
-    index
-  ) => {
+  const handleKeydown = ({ key }, index) => {
     if (key === "Backspace") {
       if (!otp[index]) {
         setActiveOtpindex((prevIndex) => Math.max(prevIndex - 1, 0));
+      }
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    if (!isChecked) {
+      toast.error("You must be at least 18 years old.");
+    } else {
+      try {
+        const user = await googleSignIn();
+        console.log(user);
+
+        const loginuser = {
+          email: user?.user?.email,
+        };
+
+        if (user?.user?.accessToken) {
+          const payload = {
+            name: user.user.displayName,
+            email: user.user.email,
+            avatar: user.user.photoURL,
+          };
+
+          // Make the signup API call
+          Signuppost(payload)(dispatch)
+            .then((res) => {
+              console.log("user backend send response", res);
+              //  console.log("err",res.error)
+              if (
+                res?.type === "SIGNUPUSERSUCESS" &&
+                res?.payload?.msg === "User created successfully"
+              ) {
+                Loginpost(loginuser)(dispatch)
+                  .then((res) => {
+                    console.log("res", res);
+                    if (
+                      res?.type === "LOGINUSERSUCESS" &&
+                      res?.payload.msg ===
+                        "login successful, please take the token and keep it safe"
+                    ) {
+                      localStorage.setItem(
+                        "Loggeduser",
+                        JSON.stringify(res?.payload?.resData)
+                      );
+                      localStorage.setItem(
+                        "token",
+                        JSON.stringify(res?.payload?.token)
+                      );
+                      toast.success("Signup Sucesssful");
+                      router.push("/dashboard");
+                    } else {
+                      toast.error("something went wrong");
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    toast.error(err);
+                  });
+              }
+
+              if (
+                typeof res === "undefined" ||
+                typeof res.status === "undefined"
+              ) {
+                Loginpost(loginuser)(dispatch)
+                  .then((res) => {
+                    console.log("login", res);
+                    if (
+                      res?.type === "LOGINUSERSUCESS" &&
+                      res?.payload.msg ===
+                        "login successful, please take the token and keep it safe"
+                    ) {
+                      localStorage.setItem(
+                        "Loggeduser",
+                        JSON.stringify(res?.payload?.resData)
+                      );
+                      localStorage.setItem(
+                        "token",
+                        JSON.stringify(res?.payload?.token)
+                      );
+                      toast.success("Signup Sucesssful");
+                      router.push("/dashboard");
+                    } else {
+                      toast.error("something went wrong");
+                    }
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                    toast.error(err);
+                  });
+              }
+            })
+            .catch((err) => {
+              console.error("Error during signup API call:", err.status);
+              toast.error("Error during signup. Please try again later.");
+            });
+        }
+      } catch (error) {
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        toast.error(errorCode);
+        console.error("Error during Google sign-in:", error);
       }
     }
   };
@@ -130,105 +227,93 @@ const PhoneNumber= () => {
     inputRef.current?.focus();
   }, [activeotpindex]);
 
-  const handleGoogleLogin = async () => {
-    if (!isChecked) {
-      toast.success("min age 18 Check if you are 18");
+  const PhNumber = selectedCountryCode + phoneNumber;
+  console.log("phone", PhNumber);
+  console.log(phoneNumber);
+
+  const Loggeduser = () => {
+    const datauser = localStorage.getItem("Loggeduser");
+    const logedinfo = datauser ? JSON.parse(datauser) : null;
+    if (!logedinfo) {
+      router.push("/login");
     } else {
-      try {
-        const user = await googleSignIn();
-        console.log(user);
-
-        const payload = {
-          name: user?.user?.displayName,
-          email: user?.user?.email,
-          avatar: user?.user?.photoURL,
-        };
-        //  console.log("sendbackd",payload)
-        const loginuser = {
-          email: user?.user?.email,
-        };
-        console.log("loginuser", loginuser);
-        Signuppost(payload)(dispatch)
-          .then((res) => {
-            console.log("userbackendsendresponse", res);
-
-            Loginpost(loginuser)(dispatch)
-              .then((res) => {
-                console.log("res", res);
-                if (
-                  res?.type === "LOGINUSERSUCESS" &&
-                  res?.payload.msg ===
-                    "login successful, please take the token and keep it safe"
-                ) {
-                  localStorage.setItem(
-                    "Loggeduser",
-                    JSON.stringify(res?.payload?.resData)
-                  );
-                  localStorage.setItem(
-                    "token",
-                    JSON.stringify(res?.payload?.token)
-                  );
-                  toast.success("Signup Sucesssful");
-                  router.push("/dashboard");
-                } else {
-                  toast.error("something went wrong");
-                }
-              })
-              .catch((err) => {
-                console.log(err);
-                toast.error(err);
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-            toast.error(err);
-          });
-      } catch (error) {
-        console.log(error);
-        toast.error(error);
-      }
+      router.push("/dashboard");
     }
   };
 
-  const PhNumber = selectedCountryCode + phoneNumber;
-
   const handleGetOTP = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
     if (!isChecked) {
-      toast.success("min age 18 Check if you are 18");
-    } else {
-      setError("");
-      if (phoneNumber === "" || phoneNumber === undefined) {
-        toast.error("number is Required");
-        return setError("Please enter a valid phone number!");
-      } else if (phoneNumber.length < 10) {
-        toast.error("check number is Required");
-      } else if (phoneNumber.length > 10) {
-        toast.error("Phone number is not more than 10 digit");
-      }
-      try {
-        const res = await setUpCaptcha(PhNumber);
-        toast.success("OTP Sent Succesfully");
-        setConfirmationResult(res);
-        setTemp(true);
-      } catch (err) {
-        console.log(err);
-        setError(err.message);
-        toast.error(err.message);
-      }
+      toast.error("Please confirm that you are 18 or older.");
+      setLoading(false);
+      return; // Exit the function if the age check fails
+    }
+    setError("");
+
+    if (!phoneNumber || phoneNumber.length !== 10) {
+      toast.error("Please enter a valid 10-digit phone number.");
+      setLoading(false);
+      return setError("Please enter a valid phone number!");
+    }
+
+    try {
+      const res = await setUpCaptcha(PhNumber); // Fixed variable name
+      toast.success("OTP Sent Successfully");
+      setConfirmationResult(res);
+
+      setTemp(true);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      setError(err.message);
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleverifyOTP = async (confirmationResult, adotp) => {
+    setLoading(true);
     try {
       const userCredential = await confirmationResult.confirm(adotp);
 
       console.log("usercre", userCredential);
-      router.push("/createuser");
-      toast.success("Verify sucessfully");
+      // router.push("/createuser");
+      const payload = {
+        phone: phoneNumber,
+      };
+      localStorage.setItem("userphone", JSON.stringify(payload));
+      dispatch(Phoneloginpost(payload))
+        .then((res) => {
+          console.log("res", res);
+          if (res?.type === "PHONELOGINUSERSUCESS") {
+            localStorage.setItem(
+              "Loggeduser",
+              JSON.stringify(res?.payload?.resData)
+            );
+            localStorage.setItem("token", JSON.stringify(res?.payload?.token));
+            setLoading(false);
+            toast.success("Verified successfully");
+            Loggeduser();
+          } else {
+            router.push("/createuser");
+            toast.success("Verified successfully");
+          }
+          setLoading(false);
+        })
+        .catch((err) => {
+          console.log("err", err);
+          setLoading(false);
+        });
     } catch (error) {
-      toast.error(error);
-      console.log(error);
+      console.error("Error verifying OTP:", error);
+      console.log(err.message);
+      toast.error("Error verifying OTP. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -237,7 +322,7 @@ const PhoneNumber= () => {
       {confirmationResult ? (
         <div className=" mx-auto border-yellow-500 ">
           <label htmlFor="OTP" className="text-white  text-sm">
-            Email OTP
+            Enter OTP
           </label>
 
           <div className="w-[100%] pt-2 border-red-500 flex justify-center items-center gap-1 space-x-2">
@@ -274,7 +359,18 @@ const PhoneNumber= () => {
               type="submit"
               className="text-white py-1 px-2 font-semibold text-sm text-center "
             >
-              Verify
+              {loading ? (
+                <div className="w-[50%] flex items-center h-[15px] m-auto  ">
+                  <Image
+                    src={`https://s3.us-east-2.amazonaws.com/sikkaplay.com-assets/assets/users/loading.gif`}
+                    alt="loader"
+                    width={200}
+                    height={100}
+                  />
+                </div>
+              ) : (
+                "Verify"
+              )}
             </button>
           </div>
 
@@ -354,8 +450,18 @@ const PhoneNumber= () => {
                 type="submit"
                 className="text-white py-1 px-2 font-normal text-sm text-center"
               >
-                {" "}
-                Get OTP{" "}
+                {loading ? (
+                  <div className="w-[50%] flex items-center h-[15px] m-auto  ">
+                    <Image
+                      src={`https://s3.us-east-2.amazonaws.com/sikkaplay.com-assets/assets/users/loading.gif`}
+                      alt="loader"
+                      width={200}
+                      height={100}
+                    />
+                  </div>
+                ) : (
+                  "Get OTP"
+                )}
               </button>
             </div>
 
@@ -373,18 +479,6 @@ const PhoneNumber= () => {
                   <h2 className="text-white text-center m-auto text-sm">
                     {" "}
                     Continue with Google{" "}
-                  </h2>
-                </div>
-              </div>
-            </div>
-
-            <div className="py-2">
-              <div className=" py-2 hover:cursor-pointer  bg-[#1E1E1E] flex items-center justify-center border-yellow-600 rounded-md">
-                <div className="py-1 px-2 flex justify-between gap-2 border-red-600">
-                  <Image src={Applelogo} alt="Applelogo" />
-                  <h2 className="text-white text-center m-auto text-sm">
-                    {" "}
-                    Continue with Apple{" "}
                   </h2>
                 </div>
               </div>
@@ -410,3 +504,69 @@ const PhoneNumber= () => {
 };
 
 export default PhoneNumber;
+
+/**
+ *  const handleGoogleLogin = async () => {
+    if (!isChecked) {
+      toast.success("min age 18 Check if you are 18");
+    } else {
+      try {
+        const user = await googleSignIn();
+        console.log(user);
+            if(user?.user?.accessToken) {
+
+            }
+        const payload = {
+          name: user?.user?.displayName,
+          email: user?.user?.email,
+          avatar: user?.user?.photoURL,
+        };
+       
+        const loginuser = {
+          email: user?.user?.email,
+        };
+        console.log("loginuser", loginuser);
+        
+        Signuppost(payload)(dispatch)
+          .then((res) => {
+            console.log("userbackendsendresponse", res);
+            
+            //  Loginpost(loginuser)(dispatch)
+            //    .then((res) => {
+            //      console.log("res", res);
+            //      if (
+            //        res?.type === "LOGINUSERSUCESS" &&
+            //        res?.payload.msg ===
+            //          "login successful, please take the token and keep it safe"
+            //      ) {
+            //        localStorage.setItem(
+            //          "Loggeduser",
+            //          JSON.stringify(res?.payload?.resData)
+            //        );
+            //        localStorage.setItem(
+            //          "token",
+            //          JSON.stringify(res?.payload?.token)
+            //        );
+            //        toast.success("Signup Sucesssful");
+            //        router.push("/dashboard");
+            //      } else {
+            //        toast.error("something went wrong");
+            //      }
+            //    })
+            //    .catch((err) => {
+            //      console.log(err);
+            //      toast.error(err);
+            //    });
+         
+          })
+          .catch((err) => {
+            console.log(err.error);
+            toast.error(err);
+          });
+      } catch (error) {
+        console.log(error);
+        toast.error(error);
+      }
+    }
+  };
+ */

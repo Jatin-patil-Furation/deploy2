@@ -6,10 +6,15 @@ import Image from "next/image";
 
 const page = () => {
   return (
-    <div className="overflow-hidden max-w-8xl   px-2 py-2 md:pb-[16%] md:py-[12%] lg:py-[2%] bg-[#000000] bg-[url('/assets/users/userbackground.svg')]  border-green-700">
-      <div className="w-[60%] py-2 pt-10 sm:pt-1
+    <div
+      className="overflow-hidden max-w-8xl lg:w-[100%]  px-2 py-2 md:pb-[16%] md:py-[12%] lg:py-[2%] bg-[#000000] 
+    bg-[url('/assets/users/userbackground.svg')] bg-cover  border-green-700"
+    >
+      <div
+        className="w-[60%]  py-2 pt-10 sm:pt-1
        sm:w-[50%] md:w-[40%] 
-       lg:w-[20%]  flex items-center justify-center m-auto  border-green-600">
+       lg:w-[20%]  flex items-center justify-center m-auto  border-red-600"
+      >
         <Image
           src={
             "https://s3.us-east-2.amazonaws.com/sikkaplay.com-assets/assets/users/sikkuserlogo.svg"
