@@ -28,7 +28,7 @@ body {
   border-radius: 4px;
 }
 .btn-parent {
-  @apply  px-3 py-1 text-base  relative inline-flex  items-center justify-center  m-1 cursor-pointer active:shadow-none shadow-lg;
+  @apply px-3 py-1 text-base  relative inline-flex  items-center justify-center  m-1 cursor-pointer active:shadow-none shadow-lg;
 }
 .btn-child {
   @apply absolute w-0 h-0 transition-all duration-300 ease-out bg-white rounded-full group-hover:w-20 group-hover:h-20 group-hover:scale-105 opacity-10;
@@ -420,5 +420,6 @@ body {
     border-top-color: #3498db;
   }
 }
-
-
+.transform {
+  transform: translate(-50%, -50%);
+}

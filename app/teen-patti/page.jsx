@@ -471,7 +471,7 @@ const LandscapePage = () => {
         {/* table */}
         <div className="h-[76%] w-[100%]">
           <div className="Img-container absolute left-1/2 top-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[75vw] sml:w-[65vw] xl:w-[62vw] 2xl:w-[70vw]    max-w-7xl ">
-            <d  iv className="relative w-full h-full">
+            <div className="relative w-full h-full">
               <img
                 src={"/assets/Game-table/table-background.svg"}
                 alt="table"
@@ -520,7 +520,7 @@ const LandscapePage = () => {
                           backgroundImage: `url(${
                             slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
                               ?.playerInfo?.avatar ||
-                            " /assets/drawer/user-avatar.svg"
+                            "/assets/drawer/user-avatar.svg"
                           })`,
                         }}
                       >
@@ -998,7 +998,7 @@ const LandscapePage = () => {
                   </div>
                 )}
               </div>
-            </d>
+            </div>
             <Cardanimate
               cardsInfo={cardsInfo || players?.[playerId]?.cardSet?.cards}
               seeplayingcard={players?.[playerId]?.seen}
