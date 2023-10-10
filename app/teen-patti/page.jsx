@@ -613,16 +613,68 @@ const LandscapePage = () => {
                       className="w-full cursor-pointer"
                     />
                   </div>
-                )}
-                {players?.[playerId]?.turn &&
-                  players?.[playerId]?.playerInfo?.isAdmin && (
-                    <div onClick={() => setBlockPlayerModal(true)}>
-                      <img
-                        src={"/assets/Game-table/info-tag.svg"}
-                        alt="Info-tag"
-                        width={50}
-                        height={50}
-                        className="w-full cursor-pointer "
+                </div>
+              )}
+              <img
+                className="absolute left-[49%] top-[-1rem] mxl:top-[-1rem] transform -translate-x-1/2 -translate-y-1/2 w-[19%] mxl:w-[20%]  2xl:w-[22%]"
+                src={"/assets/Game-table/Game-host.svg"}
+                alt="game-host"
+                width={50}
+                height={50}
+              />
+
+              {/* left- top*/}
+              <div className="absolute left-[14%] lg:left-[17%] 2xl:left-[18%] top-[-1rem] 2xl:top-[-1rem] transform -translate-x-1/2 -translate-y-1/2 w-[35%] lg:w-[30%] 2xl:w-[25%]   h-[50%] md:h-[40%] 2xl:h-[30%] my-3  ">
+                <div className="relative w-full h-full">
+                  <div className="relative w-[50%]  ml-auto flex flex-col items-center gap-3 mr-2  ">
+                    <p className="text-sm text-center lg:text-base">
+                      {slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
+                        ? slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
+                            .playerInfo.userName
+                        : "Sit Down"}
+                    </p>
+                    <div className="relative">
+                      <div
+                        className={`w-16 h-16 lg:w-24 lg:h-24   mxl:w-28 mxl:h-28 2xl:w-36 2xl:h-36 rounded-full  bg-center bg-no-repeat bg-cover relative overflow-hidden `}
+                        style={{
+                          backgroundImage: `url(${
+                            slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
+                              ?.playerInfo?.avatar ||
+                            "/assets/drawer/user-avatar.svg"
+                          })`,
+                        }}
+                      >
+                        {slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
+                          ?.active && (
+                          <div className="absolute w-full h-[50%] bg-GreyLight opacity-80 font-bold py-1  xl:py-0 bottom-[-1rem] lg:bottom-[-1.3rem] 2xl:bottom-[-1.6rem]  left-0 text-center text-xs lg:text-base">
+                            {slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
+                              ?.packed
+                              ? "packed"
+                              : slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
+                                  ?.seen
+                              ? "Seen"
+                              : "Blind"}
+                          </div>
+                        )}
+                      </div>
+                      {slotPlayerMap?.[(+playerSlotIndex + 4) % 7 || 7]
+                        ?.winner && (
+                        <img
+                          src={"/assets/game/winning.gif"}
+                          alt="win GIF"
+                          width={200}
+                          height={200}
+                          className=" absolute w-80  h-full bottom-0 z-40"
+                        />
+                      )}
+                      <div className="absolute inset-[-.5rem] flex items-center justify-center ring-2 ring-white rounded-full"></div>
+                    </div>
+                    {slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]?.active && (
+                      <Cardlefttop
+                        cardsInfo={
+                          slotPlayerMap[(+playerSlotIndex + 4) % 7 || 7]
+                            ?.cardSet?.cards
+                        }
                       />
                     </div>
                   )}

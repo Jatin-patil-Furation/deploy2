@@ -24,6 +24,7 @@ const config: Config = {
       },
       fontSize: {
         xxs: ".5rem",
+        xxxs: ".25rem",
       },
       screens: {
         sm: "640px",
@@ -34,6 +35,10 @@ const config: Config = {
         xl: "1280px",
         mxl: "1400px",
         xs: "560px",
+
+        customsm: {
+          raw: "(min-height: 320px),(min-width:568px),(max-width:374px),(max-height:374px) ",
+        },
       },
     },
   },
